@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/droid-arabic-kufi" type="text/css"/>
+    <title>لعبة صنع السمبوسة</title>
+    <style>
+        @import url(https://fonts.googleapis.com/earlyaccess/droidarabickufi.css);
+        
+        body {
+            /* font-family: 'Droid Arabic Kufi', serif; */
+            font-family: 'Droid Arabic Kufi', serif;
+            text-align: center;
+            background-color: rgb(7, 51, 104);
+            color: white;
+        }
+        #wrapper {
+            margin-top: 50px;
+        }
+        #sambusa {
+            background-color: rgb(76, 71, 81); 
+            justify-content: center;
+            align-items: center;
+            color: white;
+            border-radius: 10px;
+            padding: 10px;
+            font-family: 'Droid Arabic Kufi', serif;
+        }
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid black;
+            position: absolute;
+            bottom: 0; /* تحديد الوضع بالأسفل */
+            transform-origin: center bottom;
+        }
+        #sambusaImage {
+            display: none;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+        }
+        #countdown {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        #center-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="countdown">الوقت المتبقي: <span id="timer">20</span> ثانية</div>
+    <h1>لعبة صنع السمبوسة</h1>
+    <div id="center-button">
+        <button id="sambusa" onclick="rollTriangles()">اضغط لصنع السمبوسة</button>
+    </div>
+    <div id="wrapper">
+        <div id="finish"> </div>
+        <center>
+         <div id="sambusaCount">عدد السمبوسات المكتملة: 0</div>
+        <img id="sambusaImage" src="" alt="سمبوسة"></center>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js"></script>
+    <script>
+        window.addEventListener('load', function() {
+            var userID0 = localStorage.getItem('email');
+            if (!userID0) {
+                // The user is not registered, show a warning message
+                alert('يجب عليك التسجيل للمشاركة في اللعبة!');
+                document.getElementById('sambusa').innerHTML = 'التسجيل';
+            }
+        });
+
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAr1hQK-pqmDlStxEScGJsXeLd3ZxabdhQ",
+            authDomain: "generosity-of-hearts.firebaseapp.com",
+            databaseURL: "https://generosity-of-hearts-default-rtdb.firebaseio.com",
+            projectId: "generosity-of-hearts",
+            storageBucket: "generosity-of-hearts.appspot.com",
+            messagingSenderId: "283740767779",
+            appId: "1:283740767779:web:749e1eb0e20c8516f25396",
+            measurementId: "G-L0JZMTHQR7"
+        };
+
+
+        firebase.initializeApp(firebaseConfig);
+
+        // Reference to the Firebase database
+        var database = firebase.database();
+
+        let stages = ['s1.svg', 's2.svg', 's3.svg', 's4.svg', 's5.svg'];
+        let currentStageIndex = 0;
+        let sambusaCount = 0;
+
+        function rollTriangles() {
+            userID2 = localStorage.getItem('userKey');
+            if (countdown <= 0) {
+                // في حالة انتهاء الوقت، لا يمكن صنع السمبوسة
+                alert("انتهى الوقت! لا يمكنك صنع السمبوسة،انتظر ليتم تحميل لوحة الصدارة");
+                updateCountdown();
+                return;
+            }
+            if (!navigator.onLine) {
+                alert("لا يمكن صنع السمبوسة في حالة انقطاع الإنترنت.");
+                return; 
+            }
+
+            if(!userID2){
+                window.location.href = 'login.html';
+            } else {
+                let sambusa = document.getElementById('sambusa');
+                let finish = document.getElementById('finish');
+                let sambusaImage = document.getElementById('sambusaImage');
+                let sambusaCountElement = document.getElementById('sambusaCount');
+                let timerElement = document.getElementById('timer');
+
+                sambusaImage.src = stages[currentStageIndex];
+                sambusaImage.style.display = 'block';
+
+                if (currentStageIndex === stages.length - 1) {
+                    sambusaCount++;
+                    let finishImage = document.createElement('img');
+                    finishImage.src = 's5.svg';
+                    finishImage.width = 80;
+                    finish.appendChild(finishImage);
+                    sambusaCountElement.textContent = 'عدد السمبوسات المكتملة: ' + sambusaCount;
+
+                    currentStageIndex = 0;
+                    // setTimeout(function() {
+                    //     sambusaImage.style.display = 'none';
+                    //     finish.innerHTML = ''; 
+                    //     alert("انتهيت نتيجته = "+sambusaCount)
+                    // }, 20000); 
+                } else {
+                    currentStageIndex++;
+                }
+            }
+        }
+
+
+        // Countdown timer
+        var countdownElement = document.getElementById('timer');
+        var countdown = 20; // Countdown duration in seconds
+
+        function updateCountdown() {
+            countdown--;
+            countdownElement.textContent = countdown;
+            if (countdown <= 0) {
+                clearInterval(timerInterval);
+                var userID2 = localStorage.getItem('email');
+                console.log('userID2:', userID2);
+
+                if (userID2) {
+                    database.ref('users').orderByChild('email').equalTo(userID2).once('value', function(snapshot) {
+                        console.log('snapshot:', snapshot.val());
+                        snapshot.forEach(function(childSnapshot) {
+                            var userData = childSnapshot.val();
+                            var userEmail = userData.email;
+                            var previousCount = userData.Count || 0;
+
+                            if (userEmail === userID2) {
+                                if (sambusaCount >= previousCount) {
+                                    database.ref('users/' + childSnapshot.key).update({
+                                        "Count": sambusaCount
+                                    });
+                                } else {
+                                    alert("نتيجتك السابقة " + previousCount + " بينما الحالية " + sambusaCount + "، لذا سيتم الاحتفاظ بالسابقة");
+                                }
+                            }
+                        });
+                        localStorage.setItem('email', userID2); 
+                        window.location.href = 'leadboard.html';
+                    }).catch(function(error) {
+                        console.log("Error getting data:", error);
+                    });
+                }
+            }
+}
+
+        // Update countdown every second
+        var timerInterval = setInterval(updateCountdown, 1000);
+    </script>
+        <script src="https://kit.fontawesome.com/d5c6986420.js" crossorigin="anonymous"></script>
+</body>
+</html>

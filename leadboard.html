@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/droid-arabic-kufi" type="text/css"/>
+    <style>
+        @import url(https://fonts.googleapis.com/earlyaccess/droidarabickufi.css);
+        
+        body {
+            font-family: 'Droid Arabic Kufi', serif;
+            text-align: center;
+            background-color: rgb(7, 51, 104);
+            color: white;
+        }
+        #wrapper {
+            margin-top: 50px;
+        }
+        #sambusa {
+            background-color: rgb(76, 71, 81); 
+            justify-content: center;
+            align-items: center;
+            color: white;
+            border-radius: 10px;
+            padding: 10px;
+            position: absolute;
+            bottom: 50px; 
+            transform-origin: center bottom;
+            font-family: 'Droid Arabic Kufi', serif;
+        }
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid black;
+            position: absolute;
+            bottom: 0; /* تحديد الوضع بالأسفل */
+            transform-origin: center bottom;
+        }
+        #sambusaImage {
+            display: none;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+        }
+        #countdown {
+            font-size: 24px;
+            margin-top: 20px;
+        } 
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: black;
+        }
+
+        .highlight {
+            border: 3px rgb(207, 207, 88) solid; /* لون الخلفية الأصفر */
+            font-weight: bold;
+        }
+
+        #center {
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        </style>
+</head>
+<body>
+    <h1>المتصدرين</h1>
+    <h3 id="center">مركزك: <span id="userRank"></span></h3>
+    <table id="leaderboard">
+        <thead>
+            <tr>
+                <th>الترتيب</th>
+                <th>المستخدم</th>
+                <th>عدد السمبوسات</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js"></script>
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAr1hQK-pqmDlStxEScGJsXeLd3ZxabdhQ",
+            authDomain: "generosity-of-hearts.firebaseapp.com",
+            databaseURL: "https://generosity-of-hearts-default-rtdb.firebaseio.com",
+            projectId: "generosity-of-hearts",
+            storageBucket: "generosity-of-hearts.appspot.com",
+            messagingSenderId: "283740767779",
+            appId: "1:283740767779:web:749e1eb0e20c8516f25396",
+            measurementId: "G-L0JZMTHQR7"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        var database = firebase.database();
+
+        // جلب بيانات المستخدمين وفرزها بناءً على عدد السمبوسات وتنظيمها بشكل تنازلي
+        database.ref('users').once('value', function(snapshot) {
+            var leaderboardTable = document.getElementById('leaderboard').getElementsByTagName('tbody')[0];
+            leaderboardTable.innerHTML = ''; // تفريغ المحتوى السابق
+
+            var rank = 1;
+            var usersData = [];
+            snapshot.forEach(function(childSnapshot) {
+                var userData = childSnapshot.val();
+                if (userData && userData.email && userData.Count !== undefined) {
+                    var existingUserIndex = usersData.findIndex(user => user.email === userData.email);
+                    if (existingUserIndex === -1) {
+                        usersData.push({ name: userData.name, email: userData.email, count: userData.Count });
+                    } else {
+                        usersData[existingUserIndex].count = Math.max(usersData[existingUserIndex].count, userData.Count);
+                    }
+                }
+            });
+
+            usersData.sort((a, b) => b.count - a.count);
+
+            usersData.forEach(function(user, index) {
+                var row = leaderboardTable.insertRow();
+                var rankCell = row.insertCell(0);
+                var nameCell = row.insertCell(1);
+                var countCell = row.insertCell(2);
+
+                rankCell.textContent = rank++;
+                nameCell.textContent = user.name;
+                countCell.textContent = user.count;
+
+                if (user.email === localStorage.getItem('email')) {
+                    row.classList.add('highlight'); 
+                    document.getElementById('center').style.display = 'block';
+                    document.getElementById('userRank').textContent = index + 1; 
+                }
+            });
+        });
+    </script>
+    <script src="https://kit.fontawesome.com/d5c6986420.js" crossorigin="anonymous"></script>
+</body>
+</html>

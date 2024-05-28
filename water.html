@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ماء الرمضان</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .container {
+            margin-top: 50px;
+            align-items: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .cup {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            margin: 0 auto;
+        }
+
+
+        .water {
+            background-color: #0099FF;
+            background-size: cover;
+            background-position: center;
+            width: 20%;
+            position: absolute;
+            bottom: 10%;
+            left: 45%;
+            z-index: -1;
+            /* تأكد من وضع الماء خلف الصورة */
+        }
+
+        /* تعيين شفافية الصورة */
+        #person {
+            position: absolute;
+            opacity: 0.8;
+            /* ضبط شفافية الصورة */
+            z-index: 1;
+            left: -30px ;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>ماء الرمضان</h1>
+        <div class="cup">
+            <!-- إضافة العنصر المائي كخلفية هنا -->
+            <div class="water" id="water"></div>
+            <!-- إضافة الصورة هنا -->
+            <center>
+                <img id="person" src="man.jpeg" width="100%" height="100%" />
+            </center>
+        </div>
+        <span id="cups">0</span>
+        <button id="drinkBtn" onmousedown="startDrinking()" onmouseup="stopDrinking()"
+            onmouseleave="stopDrinking()">اشرب الماء</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

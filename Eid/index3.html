@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>كل عام وانتم بخير 🎆</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div id='stars'></div>
+<div id='stars2'></div>
+<div id='stars3'></div>
+<div id='title'></div>
+<h1>اكمل الصورة !</h1>
+<br>
+<div class="party" title=":party:">
+  <a title=":party:" href="https://abstract.com">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </a>
+</div>
+<br><br>
+<p>اسحب وأفلت القطعة في المكان الصحيح لتكمل الصورة</p>
+<p id="timer">الوقت المستغرق: 0 ثانية</p>
+
+<br>
+<g style="--i:url(https://i.postimg.cc/QtRK1dSZ/GO.png)">
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+  <z><a></a><b draggable="true"></b></z>
+</g>
+<!-- partial -->
+<script>
+  // تحديد العناصر
+  let i = 0;
+  const puzzlePieces = document.querySelectorAll('z');
+  const timerDisplay = document.getElementById('timer');
+  let startTime, endTime, totalTime;
+  let gameStarted = false;
+  // تحديث الوقت كل ثانية
+  let intervalId;
+
+  function startTimer() {
+    startTime = new Date().getTime();
+    intervalId = setInterval(updateTime, 1000);
+  }
+
+  // دالة لإيقاف تحديث الوقت بعد اكتمال الصورة
+  function stopTimer() {
+    clearInterval(intervalId);
+  }
+
+  // دالة لإيقاف تسجيل الوقت بشكل كامل وعرض النتيجة
+  function stopTimerAndDisplayResult() {
+    endTime = new Date().getTime();
+    totalTime = Math.floor((endTime - startTime) / 1000); // بالثواني
+    timerDisplay.textContent = `الوقت المستغرق: ${totalTime} ثانية`;
+    clearInterval(intervalId);
+    console.log("تهانينا! لقد أكملت الصورة بنجاح.");
+  }
+
+  // دالة لتحديث الوقت
+  function updateTime() {
+    endTime = new Date().getTime();
+    totalTime = Math.floor((endTime - startTime) / 1000); // بالثواني
+    timerDisplay.textContent = `الوقت المستغرق: ${totalTime} ثانية`;
+  }
+
+  // إضافة حدث لبدء تسجيل الوقت عند بدء اللعبة
+  puzzlePieces.forEach(piece => {
+    piece.addEventListener('dragstart', function() {
+      if (!gameStarted) {
+        startTimer();
+        gameStarted = true;
+      }
+    });
+  });
+  puzzlePieces.forEach(piece => {
+  piece.addEventListener('dragend', function() {
+    if (checkCompletion()) {
+      alert("تهانينا! لقد أكملت الصورة بنجاح.");
+    }
+  });
+});
+
+  function checkCompletion() {
+  const pieces = document.querySelectorAll('b');
+  let completed = true;
+  pieces.forEach(piece => {
+    const parentZ = piece.parentNode;
+    const parentG = parentZ.parentNode;
+    const pieceIndex = Array.from(parentG.children).indexOf(parentZ) + 1;
+    const correctIndex = parseInt(piece.textContent);
+    if (pieceIndex !== correctIndex) {
+      completed = false;
+    }
+  });
+  return completed;
+}
+
+</script>
+
+</body>
+</html>

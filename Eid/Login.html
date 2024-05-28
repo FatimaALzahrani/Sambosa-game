@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>عيدد 🎉</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link rel="stylesheet" href="styleLogin.css">
+<style>
+  @import url(https://fonts.googleapis.com/earlyaccess/droidarabickufi.css);
+  
+  body {
+      /* font-family: 'Droid Arabic Kufi', serif; */
+      font-family: 'Droid Arabic Kufi', serif;
+      text-align: center;
+      color: white;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  form {
+      background-color: rgb(76, 71, 81); 
+      border-radius: 10px;
+      padding: 20px;
+  }
+  input {
+      font-family: 'Droid Arabic Kufi', serif;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      width: 300px;
+  }
+  input[type="submit"] {
+      background-color: #15156b;
+      color: white;
+      cursor: pointer;
+  }
+  #name{
+    padding-top: -100px;
+  }
+</style>
+</head>
+<body>
+  
+  <h2>كل عام وانتم بخير </h2>
+<form id="userDataForm">
+  <input id="party" type="checkbox"/>
+<label for="party" title="Activate party mode!"><span role="img">🎉</span></label>
+<div class="scene">
+  <div class="plane">
+    <div class="cube-squish">
+      <div class="cube-spin">
+        <div class="cube-shadow"></div>
+        <div class="cube-wrap">
+          <div class="cuboid demo-cuboid">
+            <div class="cuboid__side">
+            </div>
+            <div class="cuboid__side">
+            </div>
+            <div class="cuboid__side">
+            </div>
+            <div class="cuboid__side">
+            </div>
+            <div class="cuboid__side">
+              <div class="cuboid__eyes">
+                <div class="cuboid__eye"></div>
+                <div class="cubdoi__eye"></div>
+              </div>
+              <div class="cuboid__mouth"></div>
+            </div>
+            <div class="cuboid__side">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <input type="text" id="name" name="name" placeholder="الاسم" required>
+  <br>
+  <input type="email" id="email" name="email" placeholder="البريد الإلكتروني" required>
+  <br>
+  <input type="submit" value="البدء"/>
+</form>
+
+<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js"></script>
+<script>
+  // Initialize Firebase
+  const firebaseConfig = {
+      apiKey: "AIzaSyAr1hQK-pqmDlStxEScGJsXeLd3ZxabdhQ",
+      authDomain: "generosity-of-hearts.firebaseapp.com",
+      databaseURL: "https://generosity-of-hearts-default-rtdb.firebaseio.com",
+      projectId: "generosity-of-hearts",
+      storageBucket: "generosity-of-hearts.appspot.com",
+      messagingSenderId: "283740767779",
+      appId: "1:283740767779:web:749e1eb0e20c8516f25396",
+      measurementId: "G-L0JZMTHQR7"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  var database = firebase.database();
+  function delayedFunction() {
+    setTimeout(function() {
+    }, 2000); 
+}
+
+  document.getElementById('userDataForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // منع السلوك الافتراضي لزر الإرسال
+      var checkbox = document.getElementById("party");
+        checkbox.checked = true;
+        delayedFunction();
+      var name = document.getElementById('name').value;
+      var email = document.getElementById('email').value;
+
+      // Push user data to the database
+      var k=database.ref('Eid').push();
+      const key = k.getKey();
+      var newUser={
+      name: name,
+      email: email,
+      id: key
+  };
+  k.set(newUser)
+  .then(function(snapshot) {
+      // Store the Firebase user ID in local storage
+      localStorage.setItem('userKey', key); // تحديث تخزين مفتاح المستخدم في التخزين المحلي
+      localStorage.setItem('email', email); 
+      // Redirect to the game page after successful registration
+      window.location.href = 'index.html';
+  });
+});
+</script>
+  <script src="https://kit.fontawesome.com/d5c6986420.js" crossorigin="anonymous"></script>
+</body>
+</html>
+
+
+

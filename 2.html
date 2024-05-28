@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة توزيع الطعام للعمال</title>
+    <style>
+        /* أضف أنماط CSS هنا */
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="start-page">
+            <!-- صفحة بدء اللعبة -->
+            <h1>لعبة توزيع الطعام للعمال</h1>
+            <button onclick="startGame()">ابدأ اللعبة</button>
+        </div>
+        <div id="game-page" style="display: none;">
+            <!-- واجهة اختيار العمال ونوع الطعام -->
+            <h2>اختر عدد العمال:</h2>
+            <input type="number" id="workers" min="1" max="10">
+            <h2>اختر نوع الطعام:</h2>
+            <select id="food-type">
+                <option value="pizza">بيتزا</option>
+                <option value="burger">برجر</option>
+                <option value="sandwich">ساندويتش</option>
+            </select>
+            <button onclick="startTimer()">ابدأ التوزيع</button>
+            <div id="timer"></div>
+        </div>
+        <div id="distribution-page" style="display: none;">
+            <!-- واجهة توزيع الطعام -->
+            <h2>قم بتوزيع الطعام على العمال:</h2>
+            <div id="workers-container"></div>
+        </div>
+        <div id="result-page" style="display: none;">
+            <!-- عرض نتيجة اللعبة -->
+            <h1>انتهت اللعبة!</h1>
+            <h2 id="result-text"></h2>
+        </div>
+    </div>
+
+    <script>
+        let totalWorkers;
+        let foodType;
+        let remainingTime = 20; // زمن اللعبة بالثواني
+        let timerInterval;
+
+        function startGame() {
+            document.getElementById("start-page").style.display = "none";
+            document.getElementById("game-page").style.display = "block";
+        }
+
+        function startTimer() {
+            totalWorkers = document.getElementById("workers").value;
+            foodType = document.getElementById("food-type").value;
+            document.getElementById("game-page").style.display = "none";
+            document.getElementById("distribution-page").style.display = "block";
+            startDistribution();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            remainingTime--;
+            document.getElementById("timer").innerText = "الوقت المتبقي: " + remainingTime + " ثانية";
+            if (remainingTime === 0) {
+                clearInterval(timerInterval);
+                endGame();
+            }
+        }
+
+        function startDistribution() {
+            let workersContainer = document.getElementById("workers-container");
+            workersContainer.innerHTML = "";
+            for (let i = 1; i <= totalWorkers; i++) {
+                let workerDiv = document.createElement("div");
+                workerDiv.classList.add("worker");
+                workerDiv.innerText = "العامل " + i;
+                workerDiv.addEventListener("click", function() {
+                    distributeFood(i);
+                });
+                workersContainer.appendChild(workerDiv);
+            }
+        }
+
+        function distributeFood(workerNumber) {
+            let workerDiv = document.querySelector(".worker:nth-child(" + workerNumber + ")");
+            workerDiv.style.backgroundImage = "url('" + foodType + ".png')";
+        }
+
+        function endGame() {
+            document.getElementById("distribution-page").style.display = "none";
+            document.getElementById("result-page").style.display = "block";
+            let resultText = "تم توزيع الطعام على " + totalWorkers + " عامل في الوقت المحدد!";
+            document.getElementById("result-text").innerText = resultText;
+        }
+    </script>
+</body>
+</html>

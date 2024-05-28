@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل البيانات</title>
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/droid-arabic-kufi" type="text/css"/>
+    <style>
+        @import url(https://fonts.googleapis.com/earlyaccess/droidarabickufi.css);
+        
+        body {
+            /* font-family: 'Droid Arabic Kufi', serif; */
+            font-family: 'Droid Arabic Kufi', serif;
+            text-align: center;
+            background-color: rgb(7, 51, 104);
+            color: white;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        form {
+            background-color: rgb(76, 71, 81); 
+            border-radius: 10px;
+            padding: 20px;
+        }
+        input {
+            font-family: 'Droid Arabic Kufi', serif;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            width: 300px;
+        }
+        input[type="submit"] {
+            background-color: #15156b;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <form id="userDataForm">
+        <img src="google.jpeg" width="300px"/>
+        <h1>تسجيل البيانات</h1>
+        <input type="text" id="name" name="name" placeholder="الاسم" required>
+        <br>
+        <input type="email" id="email" name="email" placeholder="البريد الإلكتروني" required>
+        <br>
+
+        <input type="submit" value="بدء اللعبة">
+    </form>
+
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js"></script>
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAr1hQK-pqmDlStxEScGJsXeLd3ZxabdhQ",
+            authDomain: "generosity-of-hearts.firebaseapp.com",
+            databaseURL: "https://generosity-of-hearts-default-rtdb.firebaseio.com",
+            projectId: "generosity-of-hearts",
+            storageBucket: "generosity-of-hearts.appspot.com",
+            messagingSenderId: "283740767779",
+            appId: "1:283740767779:web:749e1eb0e20c8516f25396",
+            measurementId: "G-L0JZMTHQR7"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        var database = firebase.database();
+
+        document.getElementById('userDataForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // منع السلوك الافتراضي لزر الإرسال
+
+            var name = document.getElementById('name').value;
+            var email = document.getElementById('email').value;
+
+            // Push user data to the database
+            var k=database.ref('users').push();
+            const key = k.getKey();
+            var newUser={
+            name: name,
+            email: email,
+            id: key
+        };
+        k.set(newUser)
+        .then(function(snapshot) {
+            // Store the Firebase user ID in local storage
+            localStorage.setItem('userKey', key); // تحديث تخزين مفتاح المستخدم في التخزين المحلي
+            localStorage.setItem('email', email); 
+            // Redirect to the game page after successful registration
+            window.location.href = 'index.html';
+        });
+    });
+    </script>
+        <script src="https://kit.fontawesome.com/d5c6986420.js" crossorigin="anonymous"></script>
+</body>
+</html>
+
+
+

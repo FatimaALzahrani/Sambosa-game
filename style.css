@@ -1,0 +1,53 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #0099FF;
+}
+
+.container {
+  margin-top: 50px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.cup {
+  position: relative;
+  width: 200px;
+  height: 300px;
+  margin: 0 auto;
+}
+
+.water {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: #0099FF;
+  width: 100%;
+  height: 0%; 
+   position: absolute;
+  transition: height 0.5s ease; 
+  z-index: -1; 
+  background-size: cover;
+  background-position: center;
+}
+
+#person {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+background-color: #0099FF;
+  /* transition: opacity 0.5s ease; تأثير الانتقال */
+}
